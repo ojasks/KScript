@@ -1,12 +1,24 @@
-#ifndef VISITOR_H
-#define VISITOR_H
+#ifndef VISITOR_HPP
+#define VISITOR_HPP
+
+#include <vector>
 #include "AST.hpp"
 
+class Visitor {
+public:
+    std::vector<AST*> variable_definitions;
 
-AST_T* visitor_visit(AST_T* node);
-AST_T* visitor_visit_variable_definition(AST_T* node);
-AST_T* visitor_visit_variable(AST_T* node);
-AST_T* visitor_visit_function_call(AST_T* node);
-AST_T* visitor_visit_string(AST_T* node);
-AST_T* visitor_visit_compound(AST_T* node);
+    Visitor();
+
+    AST* visit(AST* node);
+    AST* visitVariableDefinition(AST* node);
+    AST* visitVariable(AST* node);
+    AST* visitFunctionCall(AST* node);
+    AST* visitString(AST* node);
+    AST* visitCompound(AST* node);
+
+private:
+    AST* builtinFunctionPrint(const std::vector<AST*>& args);
+};
+
 #endif

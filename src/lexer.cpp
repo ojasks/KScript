@@ -56,7 +56,7 @@ Token* Lexer::collectString() {
     char* value = (char*)calloc(1, sizeof(char));
     value[0] = '\0';
 
-    while (this->c != '"') {
+    while (this->c != '"' && this->c != '\0') {
         char* s = this->getCurrentCharAsString();
         value = (char*)realloc(value, (strlen(value) + strlen(s) + 1) * sizeof(char));
         strcat(value, s);
@@ -64,7 +64,7 @@ Token* Lexer::collectString() {
         this->advance();
     }
 
-    this->advance();
+    this->advance(); // skip closing quote
     return new Token(TOKEN_STRING, value);
 }
 

@@ -1,26 +1,24 @@
 #include <iostream>
 #include "include/lexer.hpp"
 #include "include/parser.hpp"
+#include "include/visitor.hpp"
 
-int main(int argc, char* argv[])
-{
-   Lexer* lexer = new Lexer(
-    (char*)"var name = \"ojas ks\"; print(name);"
-);
-    // Uncomment this block to print tokens if needed
-    // Token* token = nullptr;
-    // while ((token = lexer->getNextToken()) != nullptr) {
-    //     std::cout << "TOKEN(" << token->type << ", " << token->value << ")\n";
-    // }
+int main(int argc, char* argv[]) {
+    Lexer* lexer = new Lexer(
+        (char*)(
+            "var name = \" ojas ks\";\n"
+            "var othername = \" gurman\";\n"
+            "print(name,othername);\n"
+        )
+    );
 
     Parser* parser = new Parser(lexer);
     AST* root = parser->parse();
 
-    std::cout << root->type << std::endl;
-    std::cout << root->compound_size << std::endl;
+    Visitor* visitor = new Visitor();
+    visitor->visit(root);
 
-    // Clean up memory
-    delete root;
+    delete visitor;
     delete parser;
     delete lexer;
 

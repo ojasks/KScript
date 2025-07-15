@@ -4,34 +4,37 @@
 #include <string>
 #include <vector>
 
-enum ASTType {
-    AST_STRING = 0,
-    AST_VARIABLE,
-    AST_VARIABLE_DEFINITION,
-    AST_FUNCTION_CALL,
-    AST_COMPOUND,
-    AST_PRINT
+enum class ASTType {
+    NOOP,
+    COMPOUND,
+    FUNCTION_CALL,
+    VARIABLE_DEFINITION,
+    VARIABLE,
+    STRING
 };
 
-struct AST {
+class AST {
+public:
     ASTType type;
 
+    // COMPOUND
     std::vector<AST*> compound_value;
+
+    // FUNCTION_CALL
     std::string function_call_name;
     std::vector<AST*> function_call_arguments;
-    std::string variable_name;
-    std::string string_value;
+
+    // VARIABLE_DEFINITION
     std::string variable_definition_variable_name;
-    AST* variable_defintion_value = nullptr;
+    AST* variable_definition_value;
 
-    size_t compound_size = 0;
+    // VARIABLE
+    std::string variable_name;
 
-    AST() = default;
-    AST(ASTType type) : type(type) {}
+    // STRING
+    std::string string_value;
 
-    void updateCompoundSize() {
-        compound_size = compound_value.size();
-    }
+    AST(ASTType type);
 };
 
 #endif

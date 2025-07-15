@@ -1,21 +1,29 @@
-#pragma once
-#include <string>
-#include <vector>
+#ifndef LEXER_HPP
+#define LEXER_HPP
+
 #include "token.hpp"
 
 class Lexer {
 public:
-    Lexer(const std::string& input);
-    Token* getNextToken();
+    char c;
+    unsigned int i;
+    char* contents;
 
-private:
-    std::string input;
-    char currentChar;
-    size_t index;
+    Lexer(char* contents);
 
     void advance();
+
     void skipWhitespace();
+
+    Token* getNextToken();
+
     Token* collectString();
+
     Token* collectId();
-    std::string currentCharAsString();
+
+    Token* advanceWithToken(Token* token);
+
+    char* getCurrentCharAsString();
 };
+
+#endif

@@ -1,76 +1,96 @@
 #include "include/lexer.hpp"
+#include <cstdlib>
+#include <cstring>
 #include <cctype>
 
-Lexer::Lexer(const std::string& input) : input(input), index(0) {
-    currentChar = input[index];
+Lexer::Lexer(char* contents) {
+    this->contents = contents;
+    this->i = 0;
+    this->c = contents[this->i];
 }
 
 void Lexer::advance() {
-    index++;
-    currentChar = (index < input.size()) ? input[index] : '\0';
+    if (this->c != '\0' && this->i < strlen(this->contents)) {
+        this->i += 1;
+        this->c = this->contents[this->i];
+    }
 }
 
 void Lexer::skipWhitespace() {
-    while (currentChar == ' ' || currentChar == '\n') {
-        advance();
+    while (this->c == ' ' || this->c == 10) {
+        this->advance();
     }
-}
-
-std::string Lexer::currentCharAsString() {
-    return std::string(1, currentChar);
-}
-
-Token* Lexer::collectString() {
-    advance(); // skip opening "
-    std::string value;
-
-    while (currentChar != '"' && currentChar != '\0') {
-        value += currentChar;
-        advance();
-    }
-
-    advance(); // skip closing "
-    return new Token(TokenType::STRING, value);
-}
-
-Token* Lexer::collectId() {
-    std::string value;
-
-    while (isalnum(currentChar)) {
-        value += currentChar;
-        advance();
-    }
-
-    return new Token(TokenType::ID, value);
 }
 
 Token* Lexer::getNextToken() {
-    while (currentChar != '\0') {
-        if (currentChar == ' ' || currentChar == '\n') {
-            skipWhitespace();
-            continue;
+    while (this->c != '\0' && this->i < strlen(this->contents)) {
+        this->skipWhitespace();
+
+        if (this->c == '"') {
+            return this->collectString();
         }
 
-        if (currentChar == '"') return collectString();
-        if (isalnum(currentChar)) return collectId();
+        if (isalnum(this->c)) {
+            return this->collectId();
+        }
 
-        switch (currentChar) {
+        switch (this->c) {
             case '=':
-                advance();
-                return new Token(TokenType::EQUALS, "=");
+                return this->advanceWithToken(new Token(TOKEN_EQUALS, this->getCurrentCharAsString()));
             case ';':
-                advance();
-                return new Token(TokenType::SEMI, ";");
+                return this->advanceWithToken(new Token(TOKEN_SEMI, this->getCurrentCharAsString()));
             case '(':
-                advance();
-                return new Token(TokenType::LPAREN, "(");
+                return this->advanceWithToken(new Token(TOKEN_LPAREN, this->getCurrentCharAsString()));
             case ')':
-                advance();
-                return new Token(TokenType::RPAREN, ")");
+                return this->advanceWithToken(new Token(TOKEN_RPAREN, this->getCurrentCharAsString()));
+            case ',':
+                return this->advanceWithToken(new Token(TOKEN_COMMA, this->getCurrentCharAsString()));
         }
-
-        advance(); // skip unknown character
     }
 
-    return nullptr;
+    return new Token(TOKEN_EOF, strdup("\0"));
+}
+
+Token* Lexer::collectString() {
+    this->advance();
+    char* value = (char*)calloc(1, sizeof(char));
+    value[0] = '\0';
+
+    while (this->c != '"') {
+        char* s = this->getCurrentCharAsString();
+        value = (char*)realloc(value, (strlen(value) + strlen(s) + 1) * sizeof(char));
+        strcat(value, s);
+        free(s);
+        this->advance();
+    }
+
+    this->advance();
+    return new Token(TOKEN_STRING, value);
+}
+
+Token* Lexer::collectId() {
+    char* value = (char*)calloc(1, sizeof(char));
+    value[0] = '\0';
+
+    while (isalnum(this->c)) {
+        char* s = this->getCurrentCharAsString();
+        value = (char*)realloc(value, (strlen(value) + strlen(s) + 1) * sizeof(char));
+        strcat(value, s);
+        free(s);
+        this->advance();
+    }
+
+    return new Token(TOKEN_ID, value);
+}
+
+Token* Lexer::advanceWithToken(Token* token) {
+    this->advance();
+    return token;
+}
+
+char* Lexer::getCurrentCharAsString() {
+    char* str = (char*)calloc(2, sizeof(char));
+    str[0] = this->c;
+    str[1] = '\0';
+    return str;
 }

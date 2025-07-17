@@ -99,6 +99,22 @@ AST* Parser::parseVariableDefinition() {
     return var_def;
 }
 
+AST* Parser::parseFunctionDefinition()
+{
+    AST* ast = new AST(ASTType::FUNCTION_DEFINITION);
+    this->eat(TOKEN_ID); //function
+    std::string function_name = this->current_token->value;
+    this->eat(TOKEN_ID);
+    this->eat(TOKEN_LPAREN);
+    this->eat(TOKEN_RPAREN);
+    this->eat(TOKEN_LBRACE);
+    ast->variable_function_body = this->parseStatement();
+    this->eat(TOKEN_SEMI);
+    this->eat(TOKEN_RBRACE);
+
+    return ast;
+}
+
 AST* Parser::parseVariable() {
     std::string token_value = this->current_token->value;
     this->eat(TOKEN_ID);
@@ -122,7 +138,12 @@ AST* Parser::parseString() {
 AST* Parser::parseId() {
     if (this->current_token->value == "var") {
         return this->parseVariableDefinition();
-    } else {
+    } 
+    else if(this->current_token->value == "function")
+    {
+        return this->parseFunctionDefinition();
+    }
+    else {
         return this->parseVariable();
     }
 }

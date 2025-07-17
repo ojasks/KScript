@@ -12,6 +12,7 @@ public:
 
     AST* visit(AST* node);
     AST* visitVariableDefinition(AST* node);
+    AST* visitFunctionDefinition(AST* node);
     AST* visitVariable(AST* node);
     AST* visitFunctionCall(AST* node);
     AST* visitString(AST* node);

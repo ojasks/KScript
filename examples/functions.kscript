@@ -1,0 +1,6 @@
+function dosomething()
+{
+    print("something");
+}
+
+dosomething();

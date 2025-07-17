@@ -26,6 +26,7 @@ public:
     AST* parseFunctionCall();
     AST* parseVariable();
     AST* parseVariableDefinition();
+    AST* parseFunctionDefinition();
     AST* parseString();
     AST* parseId();
     AST* parsePrintStatement();

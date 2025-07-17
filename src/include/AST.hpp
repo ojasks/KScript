@@ -9,6 +9,7 @@ enum class ASTType {
     COMPOUND,
     FUNCTION_CALL,
     VARIABLE_DEFINITION,
+    FUNCTION_DEFINITION,
     VARIABLE,
     STRING
 };
@@ -27,6 +28,9 @@ public:
     // VARIABLE_DEFINITION
     std::string variable_definition_variable_name;
     AST* variable_definition_value;
+    
+    // FUNCTION_DEFINITION
+    AST* variable_function_body;
 
     // VARIABLE
     std::string variable_name;

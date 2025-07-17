@@ -11,6 +11,8 @@ AST* Visitor::visit(AST* node) {
     switch (node->type) {
         case ASTType::VARIABLE_DEFINITION:
             return visitVariableDefinition(node);
+        case ASTType::FUNCTION_DEFINITION:
+            return visitFunctionDefinition(node);
         case ASTType::VARIABLE:
             return visitVariable(node);
         case ASTType::FUNCTION_CALL:
@@ -31,6 +33,13 @@ AST* Visitor::visitVariableDefinition(AST* node) {
     variable_definitions.push_back(node);
     return node;
 }
+
+AST* Visitor::visitFunctionDefinition(AST* node) {
+    std::cout << "We found the Function Definiton" << std::endl;
+    return node;
+}
+
+
 
 AST* Visitor::visitVariable(AST* node) {
     for (AST* def : variable_definitions) {

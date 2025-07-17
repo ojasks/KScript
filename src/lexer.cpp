@@ -41,8 +41,12 @@ Token* Lexer::getNextToken() {
                 return this->advanceWithToken(new Token(TOKEN_SEMI, this->getCurrentCharAsString()));
             case '(':
                 return this->advanceWithToken(new Token(TOKEN_LPAREN, this->getCurrentCharAsString()));
+            case '{':
+                return this->advanceWithToken(new Token(TOKEN_LBRACE, this->getCurrentCharAsString()));
             case ')':
                 return this->advanceWithToken(new Token(TOKEN_RPAREN, this->getCurrentCharAsString()));
+            case '}':
+                return this->advanceWithToken(new Token(TOKEN_RBRACE, this->getCurrentCharAsString()));
             case ',':
                 return this->advanceWithToken(new Token(TOKEN_COMMA, this->getCurrentCharAsString()));
         }

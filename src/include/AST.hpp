@@ -14,10 +14,13 @@ enum class ASTType {
     STRING
 };
 
+class Scope; 
+
 class AST {
 public:
     ASTType type;
 
+    Scope* scope = nullptr;
     // COMPOUND
     std::vector<AST*> compound_value;
 
@@ -30,6 +33,7 @@ public:
     AST* variable_definition_value;
     
     // FUNCTION_DEFINITION
+    std::string function_definition_name;
     AST* variable_function_body;
 
     // VARIABLE

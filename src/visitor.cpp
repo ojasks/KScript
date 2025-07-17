@@ -1,4 +1,5 @@
 #include "include/visitor.hpp"
+#include "include/scope.hpp"
 #include "include/AST.hpp"
 #include <iostream>
 #include <string>
@@ -35,7 +36,10 @@ AST* Visitor::visitVariableDefinition(AST* node) {
 }
 
 AST* Visitor::visitFunctionDefinition(AST* node) {
-    std::cout << "We found the Function Definiton" << std::endl;
+    node->scope->addFunctionDefinition(node);  // ✅ Correct method call on Scope object
+    
+
+    std::cout << "We found the Function Definition: " << node->function_definition_name<<".kscript"<< "!" << std::endl;
     return node;
 }
 
@@ -55,6 +59,10 @@ AST* Visitor::visitFunctionCall(AST* node) {
     if (node->function_call_name == "print") {
         return builtinFunctionPrint(node->function_call_arguments);
     }
+     AST* fdef = node->scope->getFunctionDefinition(node->function_call_name);
+    if (fdef != nullptr) {
+        return this->visit(fdef->variable_function_body);
+    }
     std::cerr << "Undefined method '" << node->function_call_name << "'\n";
     exit(1);
 }
@@ -69,6 +77,15 @@ AST* Visitor::visitCompound(AST* node) {
     }
     return new AST(ASTType::NOOP);
 }
+
+
+// AST* Visitor::visitCompound(AST* node) {
+//     for (AST* stmt : node->compound_value) {
+//         std::cout << "Visiting compound statement of type: " << static_cast<int>(stmt->type) << std::endl;
+//         visit(stmt);
+//     }
+//     return new AST(ASTType::NOOP);
+// }
 
 AST* Visitor::builtinFunctionPrint(const std::vector<AST*>& args) {
     for (AST* arg : args) {

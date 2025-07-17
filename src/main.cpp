@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
     Lexer* lexer = new Lexer((char*)source_code.c_str());
     Parser* parser = new Parser(lexer);
-    AST* root = parser->parse();
+    AST* root = parser->parse(parser->scope);
 
     Visitor* visitor = new Visitor();
     visitor->visit(root);

@@ -1,7 +1,6 @@
 # 🧠 KScript – A Minimalist Statically Typed Programming Language
 <img width="1400" height="880" alt="Kscipt" src="https://github.com/user-attachments/assets/a78b9b98-c26d-4769-b0fd-4cbcac156bd7" />
 
-![KScript Banner](A_digital_image_emulating_a_retro_computer_termina.png)
 
 KScript is a custom-built, statically typed programming language with a C-like syntax. Designed and implemented from scratch in C++, KScript features support for:
 
